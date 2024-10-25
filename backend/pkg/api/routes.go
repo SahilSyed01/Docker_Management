@@ -18,10 +18,10 @@ func SetupRouter() *mux.Router {
 
 	router.HandleFunc("/images", ListImagesHandler).Methods("GET")
 	router.HandleFunc("/images/dangling", ListDanglingImagesHandler).Methods("GET")
-	router.HandleFunc("/images/remove", RemoveImageHandler).Methods("DELETE")
+	router.HandleFunc("/images/remove", RemoveImageHandler).Methods("DELETE")							
 	router.HandleFunc("/images/remove/all", RemoveAllImagesHandler).Methods("DELETE")
 	router.HandleFunc("/images/dangling/remove/all", RemoveAllDanglingImagesHandler).Methods("DELETE")
-	router.HandleFunc("/images/inspect", InspectImageHandler).Methods("GET")
+	router.HandleFunc("/images/inspect", InspectImageHandler).Methods("POST")
 	router.HandleFunc("/images/pull", PullImageHandler).Methods("POST")
 
 
@@ -35,8 +35,6 @@ func SetupRouter() *mux.Router {
 	router.HandleFunc("/networks/inspect", InspectNetworkHandler).Methods("POST")
 	router.HandleFunc("/networks/containers", ListContainersInNetworkHandler).Methods("POST")
 	router.HandleFunc("/networks/remove", RemoveNetworkHandler).Methods("DELETE")
-
-
 	
 	return router
 }

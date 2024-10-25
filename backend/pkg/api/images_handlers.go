@@ -63,6 +63,10 @@ func ListImagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the response content type to JSON
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -109,6 +113,10 @@ func ListDanglingImagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the response content type to JSON
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -135,6 +143,10 @@ func RemoveImageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the response content type to JSON and return success message
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	json.NewEncoder(w).Encode(map[string]string{"message": message})
 }
 
@@ -148,6 +160,10 @@ func RemoveAllImagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the response content type to JSON
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 	// Return the result messages in JSON format
 	json.NewEncoder(w).Encode(map[string]interface{}{
@@ -183,6 +199,10 @@ func InspectImageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the response content type to JSON
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 	// Return the inspected image details in JSON format
 	json.NewEncoder(w).Encode(imageDetails)
@@ -212,8 +232,32 @@ func PullImageHandler(w http.ResponseWriter, r *http.Request) {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
-
+    w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
     // Send the success response
     response := map[string]string{"message": result}
     json.NewEncoder(w).Encode(response)
+}
+
+func RemoveAllDanglingImagesHandler(w http.ResponseWriter, r *http.Request) {
+    // Call the RemoveAllDanglingImages function
+    results, err := docker.RemoveAllDanglingImages()
+    if err != nil {
+        http.Error(w, "Failed to remove dangling images: "+err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    // Set the response content type to JSON
+    w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
+    // Return the result messages in JSON format
+    json.NewEncoder(w).Encode(map[string]interface{}{
+        "message": "Dangling Images Deletion",
+        "details": results,
+    })
 }

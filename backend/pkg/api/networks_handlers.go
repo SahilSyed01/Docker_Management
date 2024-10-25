@@ -22,6 +22,10 @@ func ListNetworksHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Send response
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	json.NewEncoder(w).Encode(networks)
 }
 
@@ -50,6 +54,10 @@ func InspectNetworkHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Send response in JSON format
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	json.NewEncoder(w).Encode(networkDetails)
 }
 
@@ -75,6 +83,10 @@ func ListContainersInNetworkHandler(w http.ResponseWriter, r *http.Request) {
 
     // Encode the response as JSON and send it back to the client
     w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
     json.NewEncoder(w).Encode(map[string]interface{}{
         "containers_attached_to_network": containers,
     })
@@ -102,6 +114,10 @@ func RemoveNetworkHandler(w http.ResponseWriter, r *http.Request) {
 
     // Send success message in response
     w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
     json.NewEncoder(w).Encode(map[string]string{
         "message": message,
     })

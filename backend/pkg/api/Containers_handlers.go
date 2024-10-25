@@ -35,6 +35,10 @@ func ListContainersHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the content type to application/json
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 	// Marshal the response to JSON
 	if err := json.NewEncoder(w).Encode(response); err != nil {
@@ -62,6 +66,10 @@ func ListAllContainersHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the content type to application/json
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 	// Marshal the response to JSON
 	if err := json.NewEncoder(w).Encode(response); err != nil {
@@ -83,14 +91,17 @@ func StartContainerHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-
+    
 	// Call the StartContainer function with the provided container ID
 	message, err := docker.StartContainer(requestBody.ID)
 	if err != nil {
 		http.Error(w, "Failed to start container: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
+    w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	// Respond with the message
 	w.Write([]byte(message))
 }
@@ -110,7 +121,10 @@ func StopContainerHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to stop container: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
+    w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	// Respond with the message
 	w.Write([]byte(message))
 }
@@ -130,7 +144,10 @@ func RemoveContainerHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to remove container: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
+    w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	// Respond with the message
 	w.Write([]byte(message))
 }
@@ -146,7 +163,11 @@ func RemoveAllContainersHandler(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Failed to remove containers: "+err.Error(), http.StatusInternalServerError)
         return
     }
-
+    
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
     // Set the response content type to JSON
     w.Header().Set("Content-Type", "application/json")
 
@@ -178,9 +199,13 @@ func GetContainerLogsHandler(w http.ResponseWriter, r *http.Request) {
 		ID:   requestBody.ID,
 		Logs: logs,
 	}
-
+    
 	// Set the response content type to JSON
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	json.NewEncoder(w).Encode(logResponse)
 }
 
@@ -216,6 +241,10 @@ func GetContainerStatsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the response content type to JSON
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	json.NewEncoder(w).Encode(statsResponse)
 }
 
@@ -247,23 +276,10 @@ func InspectContainerHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set the response content type to JSON
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
 	json.NewEncoder(w).Encode(inspectResponse)
 }
 
-func RemoveAllDanglingImagesHandler(w http.ResponseWriter, r *http.Request) {
-    // Call the RemoveAllDanglingImages function
-    results, err := docker.RemoveAllDanglingImages()
-    if err != nil {
-        http.Error(w, "Failed to remove dangling images: "+err.Error(), http.StatusInternalServerError)
-        return
-    }
-
-    // Set the response content type to JSON
-    w.Header().Set("Content-Type", "application/json")
-
-    // Return the result messages in JSON format
-    json.NewEncoder(w).Encode(map[string]interface{}{
-        "message": "Dangling Images Deletion",
-        "details": results,
-    })
-}
