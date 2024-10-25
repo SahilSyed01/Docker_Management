@@ -1,37 +1,34 @@
 package config
 
 import (
-    "log"
-    "os"
-
-    "github.com/joho/godotenv"
+	"os"
 )
 
 type Config struct {
-    MongoURI   string
-    ServerPort string
+	MongoURI   string
+	ServerPort string
 }
 
 var AppConfig Config
 
 func LoadConfig() {
-    // Load environment variables from .env file
-    err := godotenv.Load()
-    if err != nil {
-        log.Println("No .env file found, using default values")
-    }
+	// Load environment variables from .env file
+	// err := godotenv.Load()
+	// if err != nil {
+	//     log.Println("No .env file found, using default values")
+	// }
 
-    AppConfig = Config{
-        //MongoURI:   getEnv("MONGO_URI", "mongodb://localhost:27017"),
-        ServerPort: getEnv("SERVER_PORT", "8090"),
-    }
+	AppConfig = Config{
+		//MongoURI:   getEnv("MONGO_URI", "mongodb://localhost:27017"),
+		ServerPort: getEnv("SERVER_PORT", "8090"),
+	}
 }
 
 // getEnv retrieves the value of the environment variable or returns a fallback value if not set.
 func getEnv(key string, fallback string) string {
-    value, exists := os.LookupEnv(key)
-    if !exists {
-        return fallback
-    }
-    return value
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		return fallback
+	}
+	return value
 }

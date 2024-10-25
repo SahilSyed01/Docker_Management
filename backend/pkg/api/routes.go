@@ -15,7 +15,6 @@ func SetupRouter() *mux.Router {
 	router.HandleFunc("/containers/stats", GetContainerStatsHandler).Methods("POST")
 	router.HandleFunc("/containers/inspect", InspectContainerHandler).Methods("POST")
 	router.HandleFunc("/containers/remove/all", RemoveAllContainersHandler).Methods("DELETE")
-	
 
 	router.HandleFunc("/images", ListImagesHandler).Methods("GET")
 	router.HandleFunc("/images/dangling", ListDanglingImagesHandler).Methods("GET")
@@ -23,7 +22,21 @@ func SetupRouter() *mux.Router {
 	router.HandleFunc("/images/remove/all", RemoveAllImagesHandler).Methods("DELETE")
 	router.HandleFunc("/images/dangling/remove/all", RemoveAllDanglingImagesHandler).Methods("DELETE")
 	router.HandleFunc("/images/inspect", InspectImageHandler).Methods("GET")
-	
+	router.HandleFunc("/images/pull", PullImageHandler).Methods("POST")
 
+
+	router.HandleFunc("/volumes", ListVolumesHandler).Methods("GET")
+	router.HandleFunc("/volumes/inspect", InspectVolumeHandler).Methods("POST")
+	router.HandleFunc("/volumes/containers", ListContainersAttachedToVolumeHandler).Methods("POST")
+	router.HandleFunc("/volumes/remove", RemoveVolumeHandler).Methods("DELETE")
+
+
+	router.HandleFunc("/networks", ListNetworksHandler).Methods("GET")
+	router.HandleFunc("/networks/inspect", InspectNetworkHandler).Methods("POST")
+	router.HandleFunc("/networks/containers", ListContainersInNetworkHandler).Methods("POST")
+	router.HandleFunc("/networks/remove", RemoveNetworkHandler).Methods("DELETE")
+
+
+	
 	return router
 }

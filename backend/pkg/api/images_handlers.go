@@ -187,3 +187,33 @@ func InspectImageHandler(w http.ResponseWriter, r *http.Request) {
 	// Return the inspected image details in JSON format
 	json.NewEncoder(w).Encode(imageDetails)
 }
+
+func PullImageHandler(w http.ResponseWriter, r *http.Request) {
+    // Read the request body
+    body, err := ioutil.ReadAll(r.Body)
+    if err != nil {
+        http.Error(w, "Invalid request body", http.StatusBadRequest)
+        return
+    }
+
+    // Parse the JSON input
+    var requestData struct {
+        Image string `json:"image"`
+    }
+    err = json.Unmarshal(body, &requestData)
+    if err != nil || requestData.Image == "" {
+        http.Error(w, "Invalid input format. Expected {image: \"image_name:version\"}", http.StatusBadRequest)
+        return
+    }
+
+    // Pull the image
+    result, err := docker.PullImage(requestData.Image)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    // Send the success response
+    response := map[string]string{"message": result}
+    json.NewEncoder(w).Encode(response)
+}

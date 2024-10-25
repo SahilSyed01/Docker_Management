@@ -3,6 +3,7 @@ package docker
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
@@ -132,20 +133,60 @@ func RemoveAllDanglingImages() ([]string, error) {
 		}
 	}
 
-	return results, nil
+	return results, err
 }
 func InspectImage(imageID string) (types.ImageInspect, error) {
-    // Create a new Docker client
-    cli, err := client.NewClientWithOpts(client.WithVersion("1.41"))
-    if err != nil {
-        return types.ImageInspect{}, err
-    }
+	// Create a new Docker client
+	cli, err := client.NewClientWithOpts(client.WithVersion("1.41"))
+	if err != nil {
+		return types.ImageInspect{}, err
+	}
 
-    // Inspect the image
-    imageInspect, _, err := cli.ImageInspectWithRaw(context.Background(), imageID)
-    if err != nil {
-        return types.ImageInspect{}, err
-    }
+	// Inspect the image
+	imageInspect, _, err := cli.ImageInspectWithRaw(context.Background(), imageID)
+	if err != nil {
+		return types.ImageInspect{}, err
+	}
 
-    return imageInspect, nil
+	return imageInspect, err
+}
+
+func PullImage(image string) (string, error) {
+	// Create a new Docker client
+	cli, err := client.NewClientWithOpts(client.WithVersion("1.41"))
+	if err != nil {
+		return "", err
+	}
+	// Check if the image already exists locally
+	_, _, err = cli.ImageInspectWithRaw(context.Background(), image)
+	if err == nil {
+		return fmt.Sprintf("Specified image '%s' already exists", image), nil
+	}
+	// Create an options object for pulling the image
+	options := types.ImagePullOptions{}
+
+	// Pull the image from Docker hub or a registry
+	reader, err := cli.ImagePull(context.Background(), image, options)
+	if err != nil {
+		return "", fmt.Errorf("failed to pull image: %v", err)
+	}
+	defer reader.Close()
+
+	// Read the output from pulling the image
+	output := ""
+	buf := make([]byte, 8)
+	for {
+		n, err := reader.Read(buf)
+		if n > 0 {
+			output += string(buf[:n])
+		}
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return fmt.Sprintf("Image %s pulled successfully", image), nil
 }
